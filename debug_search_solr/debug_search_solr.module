@@ -1,0 +1,105 @@
+<?php
+/**
+ * @file
+ * Code for the Search Debug module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function debug_search_solr_menu() {
+
+  // Settings related items.
+  $items['admin/config/search/search_api/settings'] = array(
+    'title' => 'Advanced Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('debug_search_solr_settings_form'),
+    'access arguments' => array('administer debug solr'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'includes/settings.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function debug_search_solr_permission() {
+  return array(
+    'administer debug solr' => array(
+      'title' => t('Administer Search API Solr Debugging'),
+      'description' => t('Will allow permission to administer and view Search API Debugging.'),
+    ),
+  );
+}
+
+/*
+ * Parse a readable output of a Solr query
+ * To be used within a hook_search_api_solr_query_alter()
+ * @param $call_args
+ * @param $pass mixed
+ * @return dpm() output
+*/
+function debug_search_solr_parse_fq($call_args, $pass = FALSE) { 
+
+  // if debugging is enabled.
+  if(debug_search_solr_solr_debug_mode() && user_access('administer debug solr')) {
+
+    if(!$pass) {
+      // parse single line strings
+      $query_string = $call_args['query'].PHP_EOL;
+      $fl = $call_args['params']['fl'].PHP_EOL;
+      $qf = $call_args['params']['qf'];
+      foreach($qf as $key => $value) {
+        $qf_concat .= $value.PHP_EOL;
+      }
+      $fq = $call_args['params']['fq'];
+      foreach($fq as $key => $value) {
+        $fq_concat .= $value.PHP_EOL;
+      }
+
+$parsed = <<<EOF
+$query_string
+$fl
+$qf_concat
+$fq_concat
+EOF;
+
+  } 
+  else {
+    $parsed = $pass;
+  }
+
+    drupal_set_message(l(t('[click here to disable this]'), 'admin/config/search/search_api/settings', array('attributes' => array('class' => 'solr-debug-link'), 'fragment' => 'solr-debug')));
+
+    drupal_set_message('--Solr query debugging info--');
+
+    // Output via devel dpm() - this is safe due to the debug mode wrapper.
+    dpm($parsed);
+  }
+}
+
+/*
+ * Helper function to check if debug mode is available.
+ * @return boolean
+*/
+function debug_search_solr_solr_debug_mode() { 
+  if(variable_get('debug_search_solr_settings_debug_output') == TRUE){
+    return TRUE;
+  }
+}
+
+/**
+ * Implements hook_search_api_solr_query_alter().
+ * Example Usage.
+ */
+function debug_search_solr_search_api_solr_query_alter(array &$call_args, SearchApiQueryInterface $query) {
+
+  // Example 1. Output debugging when debug mode is enabled. 
+  // debug_search_solr_parse_fq($call_args);
+
+  // Example 2. Output debugging dpm() 
+  // debug_search_solr_parse_fq($call_args['params'], TRUE);
+
+}

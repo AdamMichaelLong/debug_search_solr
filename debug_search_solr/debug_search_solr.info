@@ -1,0 +1,6 @@
+name = Debug Search Solr
+core = 7.x
+php = 5.2.4
+dependencies[] = devel
+dependencies[] = search_api
+dependencies[] = search_api_solr
