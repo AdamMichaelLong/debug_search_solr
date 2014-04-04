@@ -68,7 +68,7 @@ EOF;
 
   } 
   else {
-    $parsed = $pass;
+    $parsed = $call_args;
   }
 
     drupal_set_message(l(t('[click here to disable this]'), 'admin/config/search/search_api/settings', array('attributes' => array('class' => 'solr-debug-link'), 'fragment' => 'solr-debug')));
@@ -100,6 +100,6 @@ function debug_search_solr_search_api_solr_query_alter(array &$call_args, Search
   // debug_search_solr_parse_fq($call_args);
 
   // Example 2. Output debugging dpm() 
-  // debug_search_solr_parse_fq($call_args['params'], TRUE);
+  // debug_search_solr_parse_fq($var, TRUE);
 
 }
