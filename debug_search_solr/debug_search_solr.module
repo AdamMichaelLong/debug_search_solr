@@ -41,7 +41,7 @@ function debug_search_solr_permission() {
  * @param $pass mixed
  * @return dpm() output
 */
-function debug_search_solr_parse_fq($call_args, $pass = FALSE) { 
+function debug_search_solr_debug($call_args, $pass = FALSE) { 
 
   // if debugging is enabled.
   if(debug_search_solr_solr_debug_mode() && user_access('administer debug solr')) {
@@ -97,9 +97,9 @@ function debug_search_solr_solr_debug_mode() {
 function debug_search_solr_search_api_solr_query_alter(array &$call_args, SearchApiQueryInterface $query) {
 
   // Example 1. Output debugging when debug mode is enabled. 
-  // debug_search_solr_parse_fq($call_args);
+  // debug_search_solr_debug($call_args);
 
   // Example 2. Output debugging dpm() 
-  // debug_search_solr_parse_fq($var, TRUE);
+  // debug_search_solr_debug($var, TRUE);
 
 }
