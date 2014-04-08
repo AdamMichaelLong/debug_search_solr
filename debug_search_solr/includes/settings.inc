@@ -7,7 +7,7 @@ function debug_search_solr_settings_form($form, &$form_state) {
     '#type' => 'vertical_tabs',
     '#default_tab' => 'edit-upgrade',
   );
-  $form['tabs']['debug'] = debug_search_solr_solr_debug();
+  $form['tabs']['debug'] = debug_search_solr_solr_debug_form();
 
   $form['#submit'][] = 'debug_search_solr_settings_form_submit';
 
@@ -20,7 +20,7 @@ function debug_search_solr_settings_form($form, &$form_state) {
  * @return array
  *   Form item.
  */
-function debug_search_solr_solr_debug() {
+function debug_search_solr_solr_debug_form() {
 
   $form = array(
     '#type' => 'fieldset',
